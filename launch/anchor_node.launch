@@ -1,5 +1,5 @@
-<!-- launches one node for the specified bt anchor under namespace /bt_angle/ID
-the data from the anchor is therefore published on topic /bt_angle/ID/angles_raw-->
+<!-- launches one node for the specified Bluetooth anchor,
+the data from the anchor is published on topic ID/angles_raw-->
 
 <launch>
     <arg name="usb_port" default="/dev/ttyUSB0"/>
@@ -7,7 +7,5 @@ the data from the anchor is therefore published on topic /bt_angle/ID/angles_raw
     <arg name="read_freq" default="100"/>
     <arg name="n_avg" default="15"/>
 
-    <group ns="bt_angle/$(arg id)">
-        <node name="bt_angle$(arg id)" pkg="xplraoa_ros" type="bt_angle.py" args="$(arg usb_port) $(arg read_freq) $(arg n_avg)" output="screen" required='true'/>
-    </group>
+    <node name="bt_angle$(arg id)" pkg="xplraoa1_ros" type="bt_angle.py" args="$(arg usb_port) $(arg read_freq) $(arg n_avg) $(arg id)" output="screen" required='true'/>
 </launch>
