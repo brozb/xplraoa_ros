@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(xplraoa1_ros)
+project(xplraoa_ros)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -35,7 +35,7 @@ generate_messages(
 ###################################
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES xplraoa1_ros
+#  LIBRARIES xplraoa_ros
 #  CATKIN_DEPENDS geometry_msgs ros_numpy rospy std_msgs tf2 tf2_py tf2_ros
 #  DEPENDS system_lib
 )

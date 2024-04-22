@@ -10,7 +10,7 @@ import serial
 import numpy as np
 from collections import deque
 
-from xplraoa1_ros.msg import Angles
+from xplraoa_ros.msg import Angles
 
 
 class BT_angle:

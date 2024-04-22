@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>xplraoa1_ros</name>
+  <name>xplraoa_ros</name>
   <version>0.0.0</version>
   <description>The driver for u-blox XPLR-AOA1</description>
 
