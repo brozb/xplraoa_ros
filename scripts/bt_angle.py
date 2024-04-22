@@ -16,8 +16,9 @@ from xplraoa_ros.msg import Angles
 class BT_angle:
     def __init__(self, usb_port, freq, n_avg):
         rospy.init_node("bt_angle")
-        self.pub_raw = rospy.Publisher("angles_raw", Angles, queue_size=1)
-        self.pub_avg = rospy.Publisher("angles_avg", Angles, queue_size=1)
+        self.id = id
+        self.pub_raw = rospy.Publisher(id + "/angles_raw", Angles, queue_size=1)
+        self.pub_avg = rospy.Publisher(id + "/angles_avg", Angles, queue_size=1)
 
         self.queue = deque()
         self.n_avg = n_avg
@@ -48,7 +49,7 @@ class BT_angle:
         data = self.read_serial()
         if data is None:
             rospy.logerror("Communication compromised")
-        if len(data) > 1 and data[0][:4] == "+UUDF":
+        elif len(data) == 10 and data[0][:5] == b"+UUDF":
             az = float(data[2])
             el = float(data[3])
             rssi = float(data[1])
@@ -58,34 +59,43 @@ class BT_angle:
             # add to queue
             if len(self.queue) > self.n_avg:
                 self.queue.popleft()
-            self.queue.append([az_r, el_r])
+            self.queue.append([az_r, el_r, rssi])
 
             # average
             sum_az = 0
             sum_el = 0
+            sum_rssi = 0
             for m in self.queue:
                 sum_az += m[0]
                 sum_el += m[1]
+                sum_rssi += m[2]
             az_av = sum_az / len(self.queue)
             el_av = sum_el / len(self.queue)
+            rssi_av = sum_rssi / len(self.queue)
 
             # publish angles
             a1 = Angles(az_r, el_r, rssi)
             self.pub_raw.publish(a1)
-            a2 = Angles(az_av, el_av, rssi)
+            a2 = Angles(az_av, el_av, rssi_av)
             self.pub_avg.publish(a2)
+        elif len(data) == 1 and data[0] == b"\r\n":
+            # empty line
+            pass
+        elif len(data) == 2 and data[0][:6] == b"+UUDFP":
+            # advertising data sent by the tag
+            pass
         else:
             rospy.logerr("Unknown message [%s]" % (data))
 
 
 if __name__ == "__main__":
     arg = rospy.myargv(argv=sys.argv)
-    if len(arg) != 4:
+    if len(arg) != 5:
         print("ERROR: wrong number of arguments")
         print(
-            "expected three: usb_port, read_frequency, number of samples for averaging"
+            "expected four: usb_port, read_frequency, number of samples for averaging, id"
         )
         print("got:", arg[1:])
         quit()
-    b = BT_angle(arg[1], float(arg[2]), arg[3])
+    b = BT_angle(arg[1], float(arg[2]), int(arg[3]), arg[4])
     rospy.spin()
