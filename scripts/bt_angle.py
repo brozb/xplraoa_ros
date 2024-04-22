@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 # +UUDF:6C1DEBA5F60C,-53,8,2,0,37,"6C1DEBA09862","",1437347
 # instance ID | RSSI | azimuth | elevation | reserved | channel | anchor ID | user string | timestamp
@@ -14,7 +14,7 @@ from xplraoa1_ros.msg import Angles
 
 
 class BT_angle:
-    def __init__(self, usb_port: str, freq: float, n_avg: int):
+    def __init__(self, usb_port, freq, n_avg):
         rospy.init_node("bt_angle")
         self.pub_raw = rospy.Publisher("angles_raw", Angles, queue_size=1)
         self.pub_avg = rospy.Publisher("angles_avg", Angles, queue_size=1)
