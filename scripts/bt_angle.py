@@ -14,7 +14,7 @@ from xplraoa_ros.msg import Angles
 
 
 class BT_angle:
-    def __init__(self, usb_port, freq, n_avg):
+    def __init__(self, usb_port, freq, n_avg, id):
         rospy.init_node("bt_angle")
         self.id = id
         self.pub_raw = rospy.Publisher(id + "/angles_raw", Angles, queue_size=1)
